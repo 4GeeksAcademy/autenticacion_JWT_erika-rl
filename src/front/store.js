@@ -32,6 +32,48 @@ export default function storeReducer(store, action = {}) {
         ...store,
         todos: store.todos.map((todo) => (todo.id === id ? { ...todo, background: color } : todo))
       };
+
+    case 'LOGIN_SUCCESS':
+    case 'REGISTER_SUCCESS':
+      return {
+        ...store,
+        auth: {
+          isAuthenticated: true,
+          user: action.payload.user,
+          token: action.payload.token
+        }
+      };
+
+    case 'LOGOUT':
+      return {
+        ...store,
+        auth: {
+          isAuthenticated: false,
+          user: null,
+          token: null
+        },
+        notes: [] // Limpiar notas al cerrar sesión
+      };
+
+    // Acciones para notas
+    case 'SET_NOTES':
+      return {
+        ...store,
+        notes: action.payload
+      };
+
+    case 'ADD_NOTE':
+      return {
+        ...store,
+        notes: [...store.notes, action.payload]
+      };
+
+    case 'DELETE_NOTE':
+      return {
+        ...store,
+        notes: store.notes.filter(note => note.id !== action.payload)
+      };
+
     default:
       throw Error('Unknown action.');
   }    

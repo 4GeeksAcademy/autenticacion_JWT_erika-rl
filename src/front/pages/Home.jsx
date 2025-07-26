@@ -1,52 +1,28 @@
-import React, { useEffect } from "react"
+import React from "react";
+import { Link } from "react-router-dom";
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 
 export const Home = () => {
-
-	const { store, dispatch } = useGlobalReducer()
-
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
-
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
-
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
-
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
-
-			return data
-
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
-		}
-
-	}
-
-	useEffect(() => {
-		loadMessage()
-	}, [])
-
 	return (
-		<div className="text-center mt-5">
-			<h1 className="display-4">Hello Rigo!!</h1>
-			<p className="lead">
-				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
+		<div className="container text-center mt-5">
+			<h1 className="display-4 mb-3">Bienvenido a Notes App 📝</h1>
+			<img
+				src={rigoImageUrl}
+				className="img-fluid rounded-circle mb-3"
+				alt="Rigo Baby"
+				style={{ width: "150px" }}
+			/>
+			<p className="lead mb-4">
+				Una aplicación simple para guardar tus notas personales. ¡Accede desde cualquier lugar!
 			</p>
-			<div className="alert alert-info">
-				{store.message ? (
-					<span>{store.message}</span>
-				) : (
-					<span className="text-danger">
-						Loading message from the backend (make sure your python 🐍 backend is running)...
-					</span>
-				)}
+			<div className="d-flex justify-content-center gap-3">
+				<Link to="/login" className="btn btn-primary btn-lg">
+					Iniciar sesión
+				</Link>
+				<Link to="/register" className="btn btn-outline-secondary btn-lg">
+					Registrarse
+				</Link>
 			</div>
 		</div>
 	);
-}; 
+};
