@@ -6,7 +6,7 @@ export const RequireAuth = ({ children }) => {
 	const { store } = useGlobalReducer();
 
 	// Si no hay token, redirige al login
-	if (!store.token) {
+	if (!store.auth.token) {
 		return <Navigate to="/login" />;
 	}
 

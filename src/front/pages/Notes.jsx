@@ -11,21 +11,18 @@ export const Notes = () => {
 	const [content, setContent] = useState("");
 	const [loading, setLoading] = useState(true);
 
-	const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-	// Redirige si no hay token
 	useEffect(() => {
-		if (!store.token) {
+		if (!store.auth.token) {
 			navigate("/login");
 		}
-	}, [store.token]);
+	}, [store.auth.token]);
 
 	// Cargar notas del usuario
 	const fetchNotes = async () => {
 		try {
-			const response = await fetch(`${backendUrl}/api/notes`, {
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes`, {
 				headers: {
-					Authorization: `Bearer ${store.token}`,
+					Authorization: `Bearer ${store.auth.token}`,
 				},
 			});
 			if (!response.ok) throw new Error("Error al obtener las notas");
@@ -41,11 +38,11 @@ export const Notes = () => {
 	// Crear nueva nota
 	const createNote = async () => {
 		try {
-			const response = await fetch(`${backendUrl}/api/notes`, {
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${store.token}`,
+					Authorization: `Bearer ${store.auth.token}`,
 				},
 				body: JSON.stringify({ title, content }),
 			});
@@ -61,10 +58,10 @@ export const Notes = () => {
 	// Eliminar nota
 	const deleteNote = async (id) => {
 		try {
-			const response = await fetch(`${backendUrl}/api/notes/${id}`, {
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notes/${id}`, {
 				method: "DELETE",
 				headers: {
-					Authorization: `Bearer ${store.token}`,
+					Authorization: `Bearer ${store.auth.token}`,
 				},
 			});
 			if (!response.ok) throw new Error("Error al eliminar la nota");
@@ -75,8 +72,8 @@ export const Notes = () => {
 	};
 
 	useEffect(() => {
-		if (store.token) fetchNotes();
-	}, [store.token]);
+		if (store.auth.token) fetchNotes();
+	}, [store.auth.token]);
 
 	return (
 		<div className="container mt-5">

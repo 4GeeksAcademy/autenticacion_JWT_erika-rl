@@ -20,6 +20,10 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
     
+    def check_password(self, password):
+        return self.password==password
+    
+
 class Note(db.Model):
     __tablename__ = "note"
 

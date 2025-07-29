@@ -33,8 +33,7 @@ def register():
     if User.query.filter_by(email=data['email']).first():
         return jsonify({"msg": "El usuario ya existe"}), 400
 
-    new_user = User(email=data['email'])
-    new_user.set_password(data['password'])
+    new_user = User(email=data['email'], password=data['password'], is_active=True)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"msg": "Usuario creado exitosamente"}), 201
@@ -50,7 +49,7 @@ def login():
     if not user or not user.check_password(data['password']):
         return jsonify({"msg": "Credenciales inválidas"}), 401
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify(access_token=access_token), 200
 
 @api.route('/notes', methods=['POST'])
@@ -58,7 +57,6 @@ def login():
 def create_note():
     user_id = get_jwt_identity()
     data = request.get_json()
-
     new_note = Note(
         title=data.get('title'),
         content=data.get('content'),
@@ -73,6 +71,7 @@ def create_note():
 @api.route('/notes', methods=['GET'])
 @jwt_required()
 def get_notes():
+    print("estoy en notes")
     user_id = get_jwt_identity()
     notes = Note.query.filter_by(user_id=user_id).all()
     return jsonify([note.serialize() for note in notes]), 200

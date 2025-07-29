@@ -34,6 +34,11 @@ export default function storeReducer(store, action = {}) {
       };
 
     case 'LOGIN_SUCCESS':
+      return {
+        ...store,
+        notes: action.payload
+      };
+
     case 'REGISTER_SUCCESS':
       return {
         ...store,
@@ -72,6 +77,15 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store,
         notes: store.notes.filter(note => note.id !== action.payload)
+      };
+
+    case 'SET_TOKEN':
+      return {
+        ...store,
+        auth: {
+          ...(store.auth || {}),
+          token: action.payload,
+        }
       };
 
     default:

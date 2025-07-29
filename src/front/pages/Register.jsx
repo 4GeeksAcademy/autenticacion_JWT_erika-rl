@@ -9,6 +9,7 @@ export const Register = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+	confirmPassword: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -44,17 +45,8 @@ export const Register = () => {
         throw new Error(data.msg || "Error al registrar");
       }
 
-      // Guardar usuario en estado global
-      dispatch({
-        type: 'SET_USER',
-        payload: {
-          email: formData.email,
-          token: data.access_token // Asume que el backend devuelve un token JWT
-        }
-      });
-
-      // Redirigir a la página de notas
-      navigate("/notes");
+      // Redirigir a la página de login
+      navigate("/login");
     } catch (err) {
       setError(err.message);
     } finally {

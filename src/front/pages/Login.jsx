@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const Login = () => {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(null);
+	const { dispatch } = useGlobalReducer();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		setError(null);
 
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/login`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -27,7 +29,9 @@ export const Login = () => {
 			}
 
 			localStorage.setItem("token", data.access_token); // Guarda el token
+			dispatch({ type: "SET_TOKEN", payload: data.access_token }); // Actualiza el contexto
 			navigate("/notes"); // Redirige a notas
+
 		} catch (err) {
 			setError(err.message);
 		}
@@ -61,6 +65,9 @@ export const Login = () => {
 				<button type="submit" className="btn btn-success w-100">
 					Entrar
 				</button>
+				<div className="mt-3 text-center">
+					¿Todavía no tienes cuenta? <Link to="/register">Regístrate</Link>
+				</div>
 			</form>
 		</div>
 	);
